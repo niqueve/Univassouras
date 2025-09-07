@@ -1,0 +1,26 @@
+[
+  {
+    "nome": "Maria",
+    "idade": 25,
+    "cidade": "Rio de Janeiro",
+    "habilidades": ["HTML", "CSS", "Design Gráfico"]
+  },
+  {
+    "nome": "João",
+    "idade": 30,
+    "cidade": "São Paulo",
+    "habilidades": ["Python", "SQL", "Análise de Dados"]
+  },
+  {
+    "nome": "Gustavo",
+    "idade": 28,
+    "cidade": "Belo Horizonte",
+    "habilidades": ["JavaScript", "Node.js", "MongoDB"]
+  },
+  {
+    "nome": "Laura",
+    "idade": 22,
+    "cidade": "Porto Alegre",
+    "habilidades": ["React", "UI/UX", "APIs REST"]
+  }
+]
