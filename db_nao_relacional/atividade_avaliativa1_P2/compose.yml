@@ -1,0 +1,36 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    restart: always
+
+  fastapi:
+    build: .
+    container_name: fastapi
+    depends_on:
+      - rabbitmq
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./app:/app:rw
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    restart: unless-stopped
+
+  consumer:
+    build: .
+    container_name: consumer
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./app:/app:rw
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    command: ["python", "-u", "-m", "app.consumer"]
+    restart: unless-stopped
