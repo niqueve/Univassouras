@@ -4,9 +4,13 @@ import sys
 import pika
 from app.core.config import (
     RABBITMQ_HOST,
+    RABBITMQ_PORT,
     RABBITMQ_USER,
     RABBITMQ_PASS,
-    RABBITMQ_QUEUE
+    RABBITMQ_VHOST,
+    RABBITMQ_QUEUE,
+    RABBITMQ_CONNECTION_ATTEMPTS,
+    RABBITMQ_RETRY_DELAY
 )
 
 def callback(ch, method, properties, body):
@@ -20,17 +24,26 @@ def callback(ch, method, properties, body):
     # Acknowledge message receipt
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
+def get_connection_parameters():
+    """Get RabbitMQ connection parameters with retry settings"""
+    credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASS)
+    return pika.ConnectionParameters(
+        host=RABBITMQ_HOST,
+        port=RABBITMQ_PORT,
+        virtual_host=RABBITMQ_VHOST,
+        credentials=credentials,
+        connection_attempts=RABBITMQ_CONNECTION_ATTEMPTS,
+        retry_delay=RABBITMQ_RETRY_DELAY,
+        heartbeat=600
+    )
+
 def main():
     """Main consumer loop with reconnection logic"""
     while True:
         try:
-            # Setup RabbitMQ connection
-            credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASS)
-            parameters = pika.ConnectionParameters(
-                host=RABBITMQ_HOST,
-                credentials=credentials
-            )
-            connection = pika.BlockingConnection(parameters)
+            # Setup RabbitMQ connection with retry
+            print(f"Conectando ao RabbitMQ ({RABBITMQ_HOST}:{RABBITMQ_PORT})...", flush=True)
+            connection = pika.BlockingConnection(get_connection_parameters())
             channel = connection.channel()
             
             # Ensure queue exists
@@ -46,9 +59,10 @@ def main():
             print("[*] Aguardando mensagens. CTRL+C para sair", flush=True)
             channel.start_consuming()
             
-        except pika.exceptions.AMQPConnectionError:
-            print("RabbitMQ não disponível. Tentando novamente em 5s...", flush=True)
-            time.sleep(5)
+        except pika.exceptions.AMQPConnectionError as e:
+            print(f"Erro de conexão: {str(e)}", flush=True)
+            print(f"Tentando novamente em {RABBITMQ_RETRY_DELAY}s...", flush=True)
+            time.sleep(RABBITMQ_RETRY_DELAY)
             
         except KeyboardInterrupt:
             print("Consumidor interrompido pelo usuário", flush=True)
