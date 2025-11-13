@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    image: php:8.1-cli
+    container_name: ola-mundo-app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html:cached
+    environment:
+      SHOW_OLA_MUNDO: "1"
+    ports:
+      - "8000:8000"
+    command: php -S 0.0.0.0:8000 -t public
+    restart: unless-stopped
