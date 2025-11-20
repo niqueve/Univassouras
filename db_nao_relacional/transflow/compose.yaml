@@ -1,0 +1,76 @@
+services:
+  mongo:
+    container_name: transflow-mongo
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - transflow_network
+
+  redis:
+    container_name: transflow-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - transflow_network
+
+  rabbitmq:
+    container_name: transflow-rabbitmq
+    image: rabbitmq:3-management # Imagem com a UI de gerenciamento
+    ports:
+      - "5672:5672"
+      - "15672:15672" #porta da UI
+    networks:
+      - transflow_network
+  
+  api:
+    container_name: transflow-api
+    build: .
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - redis
+      - rabbitmq
+    networks:
+      - transflow_network
+    volumes:
+      - .:/transflow
+  
+  #--------------serviço do consumidor
+  worker:
+    container_name: transflow-worker
+    build: .
+    command: faststream run src.consumer:app --log-level info
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_started
+      mongo:
+        condition: service_started
+      redis:
+        condition: service_started
+    restart: on-failure
+    networks:
+      - transflow_network
+    volumes:
+      - .:/transflow
+
+#-----------------------------------persistÊncia
+volumes:
+  mongo_data:
+  redis_data:
+
+#----------------------------rede
+networks:
+  transflow_network:
+    driver: bridge

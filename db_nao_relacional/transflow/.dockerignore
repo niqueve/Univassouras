@@ -1,0 +1,41 @@
+# Arquivos do Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Configuração do Git
+.git
+.gitignore
+
+# Arquivos Sensíveis
+.env
+*.env
+
+# Ambientes Virtuais do Python
+venv/
+.venv/
+env/
+*.egg-info/
+
+# Cache e Bytecode do Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Arquivos de IDE e Sistema Operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Documentação
+README.md
+*.md
+docs/
+
+# Logs e Artefatos de Teste
+logs/
+*.log
+.pytest_cache/
+.tox/
+htmlcov/

@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-dotenv>=1.0
+pymongo
+redis
+pydantic
+pydantic-settings
+faststream[rabbit]
+faststream[cli]

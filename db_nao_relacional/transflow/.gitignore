@@ -1,0 +1,44 @@
+
+# Ambientes Virtuais (VENV)
+venv/
+.venv/
+env/
+*.venv
+
+# Cache de Bytecode
+__pycache__/
+*.pyc
+
+# Pacotes e Distribuição
+build/
+dist/
+*.egg-info/
+
+# Cache de Testes (Ex: Pytest)
+.pytest_cache/
+.coverage
+
+# Arquivos de Variáveis de Ambiente
+.env
+.env.*
+
+# --- Arquivos de OS (Windows, macOS, Linux) ---
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# --- IDEs e Editores de Código ---
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# --- Arquivos de Log ---
+*.log
+logs/
