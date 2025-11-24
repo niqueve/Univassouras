@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.override.yml
+
+# Dependências do Laravel (serão instaladas dentro do container)
+src/vendor
+src/node_modules
+
+# Arquivos de ambiente e configuração local
+src/.env
+src/.env.example
+src/.phpunit.result.cache
+
+# IDEs e Sistema
+.idea
+.vscode
+.DS_Store
+Thumbs.db

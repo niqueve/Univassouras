@@ -1,0 +1,13 @@
+# .gitignore (RAIZ)
+
+# IDEs e Editores (Não envie configurações pessoais)
+.idea
+.vscode
+*.swp
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Docker (Opcional, caso use overrides locais)
+docker-compose.override.yml
